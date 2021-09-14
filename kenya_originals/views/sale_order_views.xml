@@ -1,0 +1,16 @@
+<odoo>
+
+	<record id="view_order_form_erpbox_inherit" model="ir.ui.view">
+		<field name="name">view.order'form.erpbox.inherit</field>
+		<field name="model">sale.order</field>
+		<field name="inherit_id" ref="sale.view_order_form"/>
+		<field name="arch" type="xml">
+			<field name="payment_term_id" position="after">
+				<field name="division_id" invisible="1"/>
+				<field name="region_id" invisible="1"/>
+				<field name="area_id" invisible="1"/>
+			</field>
+		</field>
+	</record>
+
+</odoo>

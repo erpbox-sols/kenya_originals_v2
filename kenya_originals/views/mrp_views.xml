@@ -1,0 +1,15 @@
+<odoo>
+
+        <record id="view_mrp_production_form_view_form_inherit_ko" model="ir.ui.view">
+            <field name="name">mrp.production.form.inherit.ko</field>
+            <field name="model">mrp.production</field>
+            <field name="inherit_id" ref="mrp.mrp_production_form_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//form/sheet/group/group[1]/label[@for='product_qty']" position="replace">
+                    <label for="product_qty" string="Planned and Produced"/>
+                </xpath>
+            </field>
+        </record>
+
+
+</odoo>

@@ -1,0 +1,15 @@
+<odoo>
+
+		<record id="view_account_asset_form_inherit" model="ir.ui.view">
+			<field name="name">view.account.asset.inherit</field>
+			<field name="model">account.asset</field>
+			<field name="inherit_id" ref="account_asset.view_account_asset_form"/>
+			<field name="arch" type="xml">
+				<xpath expr="//h1" position='after'>
+					<field name="parent_asset_id"/>
+				</xpath>
+			</field>
+		</record>
+
+
+</odoo>

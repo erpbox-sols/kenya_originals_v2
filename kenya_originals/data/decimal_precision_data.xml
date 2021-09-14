@@ -1,0 +1,8 @@
+<odoo>
+
+	<record forcecreate="True" id="decimal_manufacturing_id" model="decimal.precision">
+        <field name="name">Manufacturing</field>
+        <field name="digits">6</field>
+    </record>
+
+</odoo>
