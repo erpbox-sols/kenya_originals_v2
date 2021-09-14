@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record id='view_stock_landed_cost_form' model='ir.ui.view'>
+        <field name="name">stock.landed.cost.form</field>
+        <field name="model">stock.landed.cost</field>
+        <field name="inherit_id" ref="stock_landed_costs.view_stock_landed_cost_form"/>
+        <field name="arch" type="xml">
+			<xpath expr="//form[1]/sheet[1]/notebook[1]/page[2]/field[@name='valuation_adjustment_lines']/tree[1]/field[@name='additional_landed_cost']" position="after">
+				<field name="landed_unit_rate"/>
+                <field name="product_total_cost" attrs="{}" readonly="1" string="Total Cost"/>
+			</xpath>
+
+            <field name="account_journal_id" position="after">
+                <field name="vendor_bill" widget="many2many_tags" options="{'no_quick_create':True,'no_create_edit':True, 'no_open':True, 'no_show':True, 'no_create':True,}"/>
+            </field>
+            
+            <field name="cost_lines" position="before">
+                <button colspan="2" name="compute_vendor_cost_lines" string="Get Cost Lines" type="object" class="oe_right btn-secondary oe_highlight" states='draft'/>
+            </field>
+            
+            <field name="vendor_bill_id" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </field>
+            
+            <field name="picking_ids" position="replace">
+                <field name="picking_ids" widget="many2many_tags" options="{'no_create_edit': True}" domain="[]"/>
+            </field>
+
+        </field>
+    </record>
+    
+    <record id='view_move_form_inherits' model='ir.ui.view'>
+        <field name="name">account.move.form.inherit</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+			
+            <field name="ref" position="after">
+                <field name="transfer" attrs="{'invisible': [('move_type', 'not in', ('in_invoice', 'in_refund', 'in_receipt'))]}"/>
+            </field>
+
+        </field>
+    </record>
+
+</odoo>
