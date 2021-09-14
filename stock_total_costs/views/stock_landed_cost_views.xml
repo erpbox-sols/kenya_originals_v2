@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record id='view_stock_landed_cost_form' model='ir.ui.view'>
+        <field name="name">stock.landed.cost.form</field>
+        <field name="model">stock.landed.cost</field>
+        <field name="inherit_id" ref="stock_landed_costs.view_stock_landed_cost_form"/>
+        <field name="arch" type="xml">
+			<xpath expr="//form[1]/sheet[1]/notebook[1]/page[2]/field[@name='valuation_adjustment_lines']/tree[1]/field[@name='additional_landed_cost']" position="after">
+				<field name="landed_unit_rate" readonly="1"/>
+                <field name="product_total_cost" attrs="{}" readonly="1" string="Total Cost"/>
+			</xpath>
+            
+        </field>
+    </record>
+
+</odoo>
