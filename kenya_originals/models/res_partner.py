@@ -18,7 +18,8 @@ class ResPartner(models.Model):
                                     ('employee','Employee'),], string="Category", default='customer')
     business_partner_code = fields.Char("Business Partner Code", copy=False)
     business_ids = fields.Many2many("trading.name", string="Business Name", copy=False)
-    saleperson_id = fields.Integer("Id", related="user_id.id")
+    sale_person_id = fields.Many2one('hr.employee', string="Salesperson", copy=False)
+    saleperson_id = fields.Integer("Id", related="sale_person_id.id")
     customer_code_sub = fields.Char("Customer Code Sub", copy=False)
     division_id = fields.Many2one('division.name', string="Division", copy=False)
     region_id = fields.Many2one('region.name', string="Region", copy=False)
@@ -50,6 +51,19 @@ class ResPartner(models.Model):
             if res.partner_category_id == 'employee':
                 seq = self.env['ir.sequence'].next_by_code('res.partner.employee')
             res.business_partner_code = seq
+        return res
+
+    def write(self, vals):
+        res = super(ResPartner, self).write(vals)
+        if 'partner_category_id' in vals:            
+            seq = ''
+            if self.partner_category_id == 'customer':
+                seq = self.env['ir.sequence'].next_by_code('res.partner.customer')
+            if self.partner_category_id == 'supplier':
+                seq = self.env['ir.sequence'].next_by_code('res.partner.supplier')
+            if self.partner_category_id == 'employee':
+                seq = self.env['ir.sequence'].next_by_code('res.partner.employee')
+            self.business_partner_code = seq
         return res
 
 class Divisions(models.Model):

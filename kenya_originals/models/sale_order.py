@@ -2,6 +2,19 @@
 
 from odoo import tools
 from odoo import api, fields, models, _
+import time
+from odoo.exceptions import UserError
+from datetime import datetime, timedelta
+
+
+class SaleAdvancePaymentInv(models.TransientModel):
+    _inherit = "sale.advance.payment.inv"
+
+    def _prepare_invoice_values(self, order, name, amount, so_line):
+        res = super(SaleAdvancePaymentInv, self)._prepare_invoice_values(order, name, amount, so_line)
+        res['trading_id'] = order.trading_id and order.trading_id.id or False
+        return res
+
 
 class SaleOrder(models.Model):
     _inherit = "sale.order"
@@ -9,11 +22,29 @@ class SaleOrder(models.Model):
     division_id = fields.Many2one('division.name', string="Division", copy=False, related="partner_id.division_id", store=True)
     region_id = fields.Many2one('region.name', string="Region", copy=False, related="partner_id.region_id", store=True)
     area_id = fields.Many2one('region.areas', string="Area", copy=False, related="partner_id.area_id", store=True)
+    trading_id = fields.Many2one("trading.name", string="Trading Name", copy=False)
+    saleperson_id = fields.Many2one('hr.employee', string="Salesperson", copy=False)
 
-    @api.onchange('partner_shipping_id')
+
+    @api.onchange('partner_shipping_id', 'partner_id')
     def onchange_partner_shipping_id(self):
         if self.partner_shipping_id and self.partner_shipping_id.user_id:
             self.user_id = self.partner_shipping_id.user_id.id
+        if self.partner_id:
+            return {'domain': {'trading_id': [('id', 'in', self.partner_id.business_ids.ids)]}}
+        elif self.partner_shipping_id:
+            return {'domain': {'trading_id': [('id', 'in', self.partner_shipping_id.business_ids.ids)]}}
+
+    def _prepare_invoice(self):
+        res = super(SaleOrder, self)._prepare_invoice()
+        res['trading_id'] = self.trading_id and self.trading_id.id or False
+        return res
+
+    @api.onchange('trading_id')
+    def onchange_trading_id(self):
+        partner_id = self.env['res.partner'].sudo().search([]).filtered(lambda x: self.trading_id in x.business_ids)
+        if partner_id:
+            self.partner_id = partner_id.id
 
 class SaleReport(models.Model):
     _inherit = "sale.report"

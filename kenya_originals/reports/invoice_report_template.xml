@@ -1,8 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
     <template id="report_invoice_document_kenya_originals_inh" inherit_id="account.report_invoice_document">
+        <xpath expr="//t[@t-set='address']" position="inside">
+            <p t-if="o.trading_id"><strong>Trading Name: </strong><span t-field="o.trading_id.name"/></p>
+        </xpath>
         <xpath expr="//span[@id='line_tax_ids']" position="replace">
             <span t-esc="', '.join(map(lambda x: (x.description or x.name), line.tax_ids.filtered(lambda tax: tax.dont_show_on_invoice == False)))" id="line_tax_ids"/>
+        </xpath>
+        <xpath expr="//tbody[hasclass('invoice_tbody')]/t[@t-set='current_subtotal']" position="before">
+            <t t-set="tax_value" t-value="0"/>
+        </xpath>
+        <xpath expr="//tbody[hasclass('invoice_tbody')]/t[@t-foreach='lines']/tr/t[@t-if='not line.display_type']/td[hasclass('o_price_total')]" position="replace">
+            <t t-set="tax_value" t-value="sum(line.tax_ids.filtered(lambda tax: tax.dont_show_on_invoice).mapped('amount'))"/>
+            <t t-set="price_subtotal" t-value="tax_value + line.price_subtotal"/>
+            <td class="text-right o_price_total">
+                <span class="text-nowrap" t-esc="price_subtotal"/>
+            </td>
+        </xpath>
+        <xpath expr="///div[hasclass('page')]/div/div/div/table/tr/td[hasclass('text-right')]" position='replace'>
+            <td class="text-right">
+                <t t-set="amount_untaxed" t-value="o.amount_untaxed + tax_value"/>
+                <span t-esc="amount_untaxed"/>
+            </td>
         </xpath>
         <xpath expr="//t[@t-as='amount_by_group']" position="replace">
             <t t-foreach="o.amount_by_group" t-as="amount_by_group">

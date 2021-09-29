@@ -13,6 +13,12 @@ class StockMove(models.Model):
              "be moved. Lowering this quantity does not generate a "
              "backorder. Changing this quantity on assigned moves affects "
              "the product reservation, and should be done with care.")
+    variance = fields.Float("Variance", digits='Manufacturing', compute="_compute_variance", store=True)
+
+    @api.depends('product_uom_qty', 'quantity_done')
+    def _compute_variance(self):
+        for rec in self:
+            rec.variance = rec.product_uom_qty - rec.quantity_done
 
 
 class ProductTemplate(models.Model):
@@ -21,6 +27,16 @@ class ProductTemplate(models.Model):
     qty_available = fields.Float(
         'Quantity On Hand', compute='_compute_quantities', search='_search_qty_available',
         compute_sudo=False, digits='Manufacturing')
+
+class MrpProduction(models.Model):
+    _inherit = 'mrp.production'
+
+    variance = fields.Float("Variance", digits='Manufacturing', compute="_compute_variance", store=True)
+
+    @api.depends('move_raw_ids', 'move_raw_ids.variance')
+    def _compute_variance(self):
+        for rec in self:
+            rec.variance = sum(rec.move_raw_ids.mapped('variance'))
 
 class MrpBomLine(models.Model):
     _inherit = 'mrp.bom.line'

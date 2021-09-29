@@ -1,0 +1,17 @@
+<odoo>
+
+        <record id="view_employee_form_inherit_ko" model="ir.ui.view">
+            <field name="name">hr.employee.form.inherit.ko</field>
+            <field name="model">hr.employee</field>
+            <field name="inherit_id" ref="hr.view_employee_form"/>
+            <field name="arch" type="xml">
+                <field name="coach_id" position="replace">
+                    <field name="division_id"/>
+                    <field name="region_ids" widget="many2many_tags"/>
+                    <field name="area_ids" domain="[('division_id', '=', division_id), ('region_id', '=', region_ids)]" widget="many2many_tags"/>
+                </field>
+            </field>
+        </record>
+
+
+</odoo>

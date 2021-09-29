@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+	<template id="report_delivery_document_kenya_originals_inh" inherit_id="stock.report_delivery_document">
+		<xpath expr="//t[@t-if='partner']/t[@t-set='address']" position="inside">
+			<p t-if="o.trading_id"><strong>Trading Name: </strong><span t-field="o.trading_id.name"/></p>
+		</xpath>
+	</template>
+</odoo>

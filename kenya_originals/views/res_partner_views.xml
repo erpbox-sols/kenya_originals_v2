@@ -6,7 +6,7 @@
 		<field name="inherit_id" ref="base.view_partner_form"/>
 		<field name="arch" type="xml">
 			<xpath expr="//form/sheet/div[hasclass('oe_title')]" position="after">
-				<field name="business_partner_code" readonly="1"/>
+				<field name="business_partner_code" readonly="1" force_save='1'/>
 			</xpath>
 			<xpath expr="//form/sheet/group/group/field[@name='vat']" position="after">
 				<field name="partner_category_id"/>
@@ -17,9 +17,10 @@
 			<xpath expr="//page[@name='contact_addresses']/field/form/sheet/field[@name='user_id']" position="replace">
 				<group>
 					<group>
-						<label for="user_id"/>
+						<field name="user_id" invisible="1"/>
+						<label for="sale_person_id"/>
 						<div class="oe_row">
-							<field name="user_id" attrs="{'invisible': [('type', '!=', 'delivery')]}"/>
+							<field name="sale_person_id" attrs="{'invisible': [('type', '!=', 'delivery')]}"/>
 							<span>  (<field name="saleperson_id" attrs="{'invisible': [('type', '!=', 'delivery')]}"/>)</span>
 						</div>
 					</group>
@@ -27,6 +28,9 @@
 			</xpath>
 			<xpath expr="//page[@name='contact_addresses']/field/form/sheet/group/group[2]/field[@name='mobile']" position="after">
 					<field name="customer_code_sub" readonly="1" attrs="{'invisible': [('type', '!=', 'delivery')]}"/>
+					<field name="division_id" attrs="{'invisible': [('type', '!=', 'delivery')]}"/>
+					<field name="region_id" attrs="{'invisible': [('type', '!=', 'delivery')]}"/>
+					<field name="area_id" domain="[('division_id', '=', division_id), ('region_id', '=', region_id)]" attrs="{'invisible': [('type', '!=', 'delivery')]}"/>
 			</xpath>
 			<xpath expr="//notebook" position="inside">
 				<page name="trading_name" string="Trading Name">
@@ -43,9 +47,10 @@
 				</field>
 			</xpath> -->
 			<xpath expr="//page[@name='sales_purchases']/group/group[1]/field[@name='user_id']" position="replace">
-				<label for="user_id"/>
+				<field name="user_id" invisible="1"/>
+				<label for="sale_person_id"/>
 				<div class="oe_row">
-					<field name="user_id" domain="[('share', '=', False)]"/>
+					<field name="sale_person_id"/>
 					<span>  (<field name="saleperson_id"/>)</span>
 				</div>
 			</xpath> 

@@ -8,6 +8,9 @@
                 <xpath expr="//form/sheet/group/group[1]/label[@for='product_qty']" position="replace">
                     <label for="product_qty" string="Planned and Produced"/>
                 </xpath>
+                <xpath expr="//page[@name='components']/field/tree/field[@name='forecast_availability']" position="after">
+                    <field name="variance"/>
+                </xpath>
             </field>
         </record>
 
